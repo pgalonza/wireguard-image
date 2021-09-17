@@ -1,0 +1,9 @@
+[Interface]
+Address = {{ client_vpn_ip }}/24
+PrivateKey = {{ client_private_key }}
+DNS = {{ dns_host }}
+
+[Peer]
+PublicKey = {{ server_public_key }}
+Endpoint = {{ server_hostname }}:{{ vpn_port }}
+AllowedIPs = 0.0.0.0/0 
