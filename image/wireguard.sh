@@ -33,4 +33,4 @@ buildah run "$ctr1" -- /bin/sh -c 'echo "net.ipv6.conf.all.forwarding = 1" >> /e
 buildah config --cmd "/bin/sh -c '/scripts/setup.sh ; /scripts/run.sh'" "$ctr1"
 buildah config --port 51820 "$ctr1"
 ## Commit this container to an image name
-buildah commit "$ctr1" "wireguard"
+buildah commit "$ctr1" "${CI_REGISTRY_IMAGE}"
