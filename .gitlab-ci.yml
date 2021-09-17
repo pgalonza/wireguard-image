@@ -10,7 +10,7 @@ before_script:
 Build image:
   stage: build
   script:
-    - dnf install buildah
+    - dnf install buildah podman
     - chmod +x ./images/wiregurad.sh
     - /images/wiregurad.sh
     - buildah push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
