@@ -4,6 +4,9 @@ default:
   tags:
     - docker
 
+variables:
+  STORAGE_DRIVER: vfs
+
 Build image:
   stage: build
   script:
