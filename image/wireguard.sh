@@ -5,7 +5,7 @@ ctr1=$(buildah from "docker.io/centos:latest")
 buildah run "$ctr1" -- dnf update -y
 buildah run "$ctr1" -- dnf install -y elfutils-libelf-devel pkgconfig "@Development Tools"
 buildah run "$ctr1" -- dnf install -y curl qrencode git jq iptables python39
-buildah run "$ctr1" -- pip3 install wgconfig qrcode[pil]
+buildah run "$ctr1" -- pip3 install -r ./wireguard-requirements.txt
 buildah run "$ctr1" -- /bin/bash -c 'WIREGUARD_RELEASE=$(curl -sX GET "https://api.github.com/repos/WireGuard/wireguard-tools/tags" | jq -r .[0].name); \
 mkdir /app; \
 cd /app; \
