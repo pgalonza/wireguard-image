@@ -1,0 +1,56 @@
+---
+- name: Install WireGuard
+  hosts: vds
+  become: yes
+  vars:
+    ug_id: 1050
+  vars_files:
+    - "{{ lookup('env', 'ANSIBLLE_VARIABLES') }}"
+  tasks:
+    - name: Add wireguard to firewall service
+      ansible.builtin.copy:
+        src: ./files/wireguard.xml
+        dst: /etc/firewalld/services/wireguard.xml
+    - name: Enable wireguard service
+      ansible.posix.firewalld:
+        zone: public
+        service: wireguard
+        permanent: yes
+        state: enabled
+        immediate: yes
+    - name: Add WireGuard service user
+      ansible.builtin.user:
+        name: wiregguard
+        comment: WireGuard service user
+        uid: "{{ ug_id }}"
+    - name: Create a directory if it does not exist
+      ansible.builtin.file:
+        path: /home/wireguard/config
+        state: directory
+        mode: '0755'
+        owner: wireguard
+        group: wireguard
+    - name: Install podman
+      dnf:
+        name: podman
+        state: latest
+    - name: Pull a WireGuuard latest image
+      containers.podman.podman_image:
+        name: registry.gitlab.com/pgalonza/wireguard-image
+        tag: latest
+    - name: Run WireGuard container
+      containers.podman.podman_container:
+        name: wireguard
+        image: registry.gitlab.com/pgalonza/wireguard-image
+        state: started
+        privileged: yes
+        volume:
+          - /wireguard/config:/config
+          - /lib/modules:/lib/modules
+          - /usr/src/kernels:/usr/src/kernels
+        env:
+          PUID: "{{ ug_id }}"
+          GUID: "{{ ug_id }}"
+          SERVERURL: "{{ vpn_url }}"
+          PEERS: "{{ peers_count }}"
+...

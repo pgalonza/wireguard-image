@@ -1,0 +1,49 @@
+---
+- name: Install server
+  hosts: vds
+  become: yes
+  vars_files:
+    - "{{ lookup('env', 'ANSIBLLE_VARIABLES') }}"
+  tasks:
+    - name: Update packages
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+    - name: Install podman
+      ansible.builtin.dnf:
+        name: podman
+        state: latest
+    - name: Update packages
+      ansible.builtin.dnf:
+        name: "kernel-headers-{{ansible_kernel}}"
+        state: latest
+    - name: Update packages
+      ansible.builtin.dnf:
+        name: "kernel-devel-{{ansible_kernel}}"
+        state: latest
+    - name: Change ssh port
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?Port\s22$'
+        line: "Port {{ ssh_port }}"
+    - name: Deny ssh root login
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?PermitRootLogin\s.*$'
+        line: "PermitRootLogin no"
+    - name: Deny empty password
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?PermitEmptyPasswords\s.*$'
+        line: "PermitEmptyPasswords no"
+    - name: Deny ssh password
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?PasswordAuthentication\s.*$'
+        line: "PasswordAuthentication no"
+    - name: Change ssh port in firewalld
+      ansible.builtin.replace:
+        path: /usr/lib/firewalld/services/ssh.xml
+        regexp: '^.*port="22"\/>$'
+        replace: 'port="{{ ssh_custom_port }}"'
+...

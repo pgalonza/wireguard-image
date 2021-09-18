@@ -16,3 +16,12 @@ Build image:
     - ./image/wireguard.sh
 #    - buildah push $CI_REGISTRY_IMAGE $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
     - buildah push $CI_REGISTRY_IMAGE $CI_REGISTRY_IMAGE:latest
+
+Deploy image:
+  stage: deploy
+  script:
+    - dnf -y python39
+    - pip3 install ansible ansible-galaxy
+    - ansible-galaxy collection install containers.podman
+    - ansible-playbook ./deploy-wireguard.yml -i production.yml
+
