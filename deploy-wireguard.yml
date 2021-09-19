@@ -5,7 +5,7 @@
   vars:
     ug_id: 1050
   vars_files:
-    - "{{ lookup('env', 'ANSIBLLE_VARIABLES') }}"
+    - "{{ lookup('env', 'ANSIBLE_VARIABLES') }}"
   tasks:
     - name: Add wireguard to firewall service
       ansible.builtin.copy:

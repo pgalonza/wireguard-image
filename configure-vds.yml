@@ -3,7 +3,7 @@
   hosts: vds
   become: yes
   vars_files:
-    - "{{ lookup('env', 'ANSIBLLE_VARIABLES') }}"
+    - "{{ lookup('env', 'ANSIBLE_VARIABLES') }}"
   tasks:
     - name: Update packages
       ansible.builtin.dnf:
