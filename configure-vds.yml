@@ -11,15 +11,16 @@
         state: latest
     - name: Install podman
       ansible.builtin.dnf:
-        name: podman
+        name:
+          - podman
+          - vim
+          - htop
         state: latest
-    - name: Update packages
+    - name: Install kernel-headers ans kernel-devel
       ansible.builtin.dnf:
-        name: "kernel-headers-{{ansible_kernel}}"
-        state: latest
-    - name: Update packages
-      ansible.builtin.dnf:
-        name: "kernel-devel-{{ansible_kernel}}"
+        name:
+          - "kernel-headers-{{ansible_kernel}}"
+          - "kernel-devel-{{ansible_kernel}}"
         state: latest
     - name: Change ssh port
       ansible.builtin.lineinfile:
