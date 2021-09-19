@@ -20,7 +20,7 @@ Build image:
 Deploy image:
   stage: deploy
   script:
-    - dnf install -y python39
+    - dnf install -y python39 openssh-clients
     - pip3 install ansible
     - ansible-galaxy collection install containers.podman
     - ansible-playbook ./deploy-wireguard.yml -i ./production.yml -vvv
