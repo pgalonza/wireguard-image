@@ -10,8 +10,8 @@ variables:
 Build image:
   stage: build
   script:
-    - dnf -y install buildah podman
-    - podman login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - dnf -y install buildah
+    - buildah login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - chmod +x ./image/wireguard.sh
     - ./image/wireguard.sh
 #    - buildah push $CI_REGISTRY_IMAGE $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
