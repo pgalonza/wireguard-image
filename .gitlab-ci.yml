@@ -23,5 +23,5 @@ Deploy image:
     - dnf install -y python39
     - pip3 install ansible
     - ansible-galaxy collection install containers.podman
-    - ansible-playbook ./deploy-wireguard.yml -i ./production.yml
+    - ansible-playbook ./deploy-wireguard.yml -i ./production.yml -vvv
 
