@@ -23,5 +23,7 @@ Deploy image:
     - dnf install -y python39 openssh-clients
     - pip3 install ansible
     - ansible-galaxy collection install containers.podman
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - ansible-playbook ./deploy-wireguard.yml -i ./production.yml -vvv
 
