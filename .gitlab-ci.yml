@@ -21,7 +21,7 @@ Deploy image:
   stage: deploy
   script:
     - dnf install -y python39
-    - pip3 install ansible ansible-galaxy
+    - pip3 install ansible
     - ansible-galaxy collection install containers.podman
     - ansible-playbook ./deploy-wireguard.yml -i ./production.yml
 
