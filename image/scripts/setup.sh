@@ -74,8 +74,8 @@ rm -rf /etc/wireguard
 mkdir -p /etc/wireguard
 ln -s /config/wg0.conf /etc/wireguard/wg0.conf
 
-groupadd -g "$PGID" wireguard
-useradd -o -u "$PUID" -g "$PGID" -s /bin/bash wireguard
+groupadd -g "${PGID}" wireguard
+useradd -o -u "${PUID}" -g "${PGID}" -s /bin/bash wireguard
 
 # permissions
 chown -R wireguard:wireguard /config/*

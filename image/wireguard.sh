@@ -5,7 +5,6 @@ ctr1=$(buildah from "docker.io/centos:latest")
 buildah run "$ctr1" -- dnf update -y
 buildah run "$ctr1" -- dnf install -y elfutils-libelf-devel pkgconfig "@Development Tools"
 buildah run "$ctr1" -- dnf install -y curl qrencode git jq iptables python39
-buildah run "$ctr1" -- pip3 install -r ./wireguard-requirements.txt
 buildah run "$ctr1" -- /bin/bash -c 'WIREGUARD_RELEASE=$(curl -sX GET "https://api.github.com/repos/WireGuard/wireguard-tools/tags" | jq -r .[0].name); \
 mkdir /app; \
 cd /app; \
@@ -24,6 +23,8 @@ rm -rf \
 /tmp/* \
 /var/tmp/*'
 buildah copy "$ctr1" './image/scripts' '/scripts'
+buildah copy "$ctr1" './wireguard-requirements.txt' '/app/wireguard-requirements.txt'
+buildah run "$ctr1" -- pip3 install -r /app/wireguard-requirements.txt
 buildah run "$ctr1" -- /bin/sh -c 'chmod +x /scripts/*'
 # buildah run "$ctr1" -- sh -c 'umask 077; touch /etc/wireguard/wg0.conf'
 buildah run "$ctr1" -- /bin/sh -c 'echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.d/99-custom.conf'
