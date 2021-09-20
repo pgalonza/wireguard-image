@@ -30,15 +30,11 @@
       dnf:
         name: podman
         state: latest
-    - name: Stop a WireGuard container
-      containers.podman.podman_container:
-        name: wireguard
-        state: stopped
-    - name: Remove WireGuard container
+    - name: Stop and Remove WireGuard container
       containers.podman.podman_container:
         name: wireguard
         state: absent
-    - name: Pull a WireGuuard latest image
+    - name: Pull a WireGuard latest image
       containers.podman.podman_image:
         name: registry.gitlab.com/pgalonza/wireguard-image
         tag: latest
