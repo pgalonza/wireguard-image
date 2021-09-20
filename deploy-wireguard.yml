@@ -11,13 +11,9 @@
       ansible.builtin.copy:
         src: ./files/wireguard.xml
         dest: /etc/firewalld/services/wireguard.xml
-    - name: Enable wireguard service
-      ansible.posix.firewalld:
-        zone: public
-        service: wireguard
-        permanent: yes
-        state: enabled
-        immediate: yes
+      notify:
+        - reload_firewalld
+        - enable_wireguard
     - name: Add WireGuard service user
       ansible.builtin.user:
         name: wiregguard
@@ -34,6 +30,14 @@
       dnf:
         name: podman
         state: latest
+    - name: Stop a WireGuard container
+      containers.podman.podman_container:
+        name: wireguard
+        state: stopped
+    - name: Remove WireGuard container
+      containers.podman.podman_container:
+        name: wireguard
+        state: absent
     - name: Pull a WireGuuard latest image
       containers.podman.podman_image:
         name: registry.gitlab.com/pgalonza/wireguard-image
@@ -53,4 +57,17 @@
           GUID: "{{ ug_id }}"
           SERVERURL: "{{ vpn_url }}"
           PEERS: "{{ peers_count }}"
+
+handlers:
+  - name: Restart firewalld service
+    command: firewall-cmd --reload
+    listen: reload_firewalld
+  - name: Enable wireguard service
+    ansible.posix.firewalld:
+      zone: public
+      service: wireguard
+      permanent: yes
+      state: enabled
+      immediate: yes
+    listen: enable_wireguard
 ...
