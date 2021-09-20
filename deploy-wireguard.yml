@@ -54,7 +54,7 @@
           - /usr/src/kernels:/usr/src/kernels
         env:
           PUID: "{{ ug_id }}"
-          GUID: "{{ ug_id }}"
+          PGID: "{{ ug_id }}"
           SERVERURL: "{{ vpn_urls[groups['vds'].index(inventory_hostname)] }}"
           PEERS: "{{ peers_count }}"
 
