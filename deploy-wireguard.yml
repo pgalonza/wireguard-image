@@ -58,16 +58,16 @@
           SERVERURL: "{{ vpn_url }}"
           PEERS: "{{ peers_count }}"
 
-handlers:
-  - name: Restart firewalld service
-    command: firewall-cmd --reload
-    listen: reload_firewalld
-  - name: Enable wireguard service
-    ansible.posix.firewalld:
-      zone: public
-      service: wireguard
-      permanent: yes
-      state: enabled
-      immediate: yes
-    listen: enable_wireguard
+  handlers:
+    - name: Restart firewalld service
+      command: firewall-cmd --reload
+      listen: reload_firewalld
+    - name: Enable wireguard service
+      ansible.posix.firewalld:
+        zone: public
+        service: wireguard
+        permanent: yes
+        state: enabled
+        immediate: yes
+      listen: enable_wireguard
 ...
