@@ -19,7 +19,7 @@ dnf clean packages; \
 dnf clean metadata; \
 dnf clean all; \
 rm -rf \
-/cache/yum \
+/var/cache/yum \
 /app/wireguard-tools \
 /tmp/* \
 /var/tmp/*'
