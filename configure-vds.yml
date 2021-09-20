@@ -9,12 +9,17 @@
       ansible.builtin.dnf:
         name: "*"
         state: latest
+    - name: Add EPEL Repositoryc
+      ansible.builtin.dnf:
+        name: epel-release
+        state: latest
     - name: Install podman
       ansible.builtin.dnf:
         name:
           - podman
           - vim
           - htop
+          - fail2ban
         state: latest
     - name: Install kernel-headers ans kernel-devel
       ansible.builtin.dnf:
@@ -26,7 +31,7 @@
       ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         regexp: '^#?Port\s22$'
-        line: "Port {{ ssh_port }}"
+        line: "Port {{ ssh_custom_port }}"
     - name: Deny ssh root login
       ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
@@ -42,6 +47,10 @@
         path: /etc/ssh/sshd_config
         regexp: '^#?PasswordAuthentication\s.*$'
         line: "PasswordAuthentication no"
+    - name: Add jail.local
+      ansible.builtin.template:
+        src: ./templates/jail.local.j2
+        dest: /etc/fail2ban/jail.local
     - name: Change ssh port in firewalld
       ansible.builtin.replace:
         path: /usr/lib/firewalld/services/ssh.xml
