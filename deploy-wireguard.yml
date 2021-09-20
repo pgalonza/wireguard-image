@@ -10,7 +10,7 @@
     - name: Add wireguard to firewall service
       ansible.builtin.copy:
         src: ./files/wireguard.xml
-        dst: /etc/firewalld/services/wireguard.xml
+        dest: /etc/firewalld/services/wireguard.xml
     - name: Enable wireguard service
       ansible.posix.firewalld:
         zone: public
