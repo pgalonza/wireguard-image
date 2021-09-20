@@ -45,7 +45,7 @@
         state: started
         privileged: yes
         volume:
-          - /wireguard/config:/config
+          - /home/wireguard/config:/config
           - /lib/modules:/lib/modules
           - /usr/src/kernels:/usr/src/kernels
         env:
