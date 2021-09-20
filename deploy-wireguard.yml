@@ -34,6 +34,10 @@
       containers.podman.podman_container:
         name: wireguard
         state: absent
+    - name: Remove an WireGuard image
+      containers.podman.podman_image:
+        name: registry.gitlab.com/pgalonza/wireguard-image
+        state: absent
     - name: Pull a WireGuard latest image
       containers.podman.podman_image:
         name: registry.gitlab.com/pgalonza/wireguard-image
