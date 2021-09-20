@@ -52,6 +52,8 @@
           - /home/wireguard/config:/config
           - /lib/modules:/lib/modules
           - /usr/src/kernels:/usr/src/kernels
+        ports:
+          - "51820:51820/udp"
         env:
           PUID: "{{ ug_id }}"
           PGID: "{{ ug_id }}"
