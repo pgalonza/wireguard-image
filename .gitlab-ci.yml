@@ -29,5 +29,5 @@ Deploy image:
     - chmod 700 ~/.ssh
     - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
-    - ansible-playbook ./deploy-wireguard.yml -i ./production.yml -vvv
+    - ansible-playbook ./deploy-wireguard.yml -i ./production.yml
 
