@@ -77,7 +77,7 @@ def main():
     vpn_domain_name: str = os.environ.get('SERVERURL', '')
     allowed_ip = ipaddress.ip_network(os.environ.get('AllowedIPs', '0.0.0.0/0'))
     dns_server = ipaddress.ip_address(os.environ.get('PEERDNS', '77.88.8.8'))
-    peers_count: int = os.environ.get('PEERS', 1)
+    peers_count: int = int(os.environ.get('PEERS', 1))
     wg = WireGuard(CONFIGURATION_DIR, SERVER_CONFIGURATION_FILE)
     subnets_ips = vpn_subnet.hosts()
     server_ip = str(next(subnets_ips)) + '/' + str(vpn_subnet.prefixlen)
