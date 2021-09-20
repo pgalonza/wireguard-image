@@ -51,7 +51,7 @@
         env:
           PUID: "{{ ug_id }}"
           GUID: "{{ ug_id }}"
-          SERVERURL: "{{ vpn_url }}"
+          SERVERURL: "{{ vpn_urls[groups['vds'].index(inventory_hostname)] }}"
           PEERS: "{{ peers_count }}"
 
   handlers:
