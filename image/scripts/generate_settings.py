@@ -91,17 +91,17 @@ def main():
     dns_server = ipaddress.ip_address(os.environ.get('PEERDNS', '77.88.8.8,77.88.8.1,2a02:6b8::feed:0ff,2a02:6b8:0:1::feed:0ff'))
     peers_count: int = int(os.environ.get('PEERS', 1))
     wg = WireGuard(CONFIGURATION_DIR, SERVER_CONFIGURATION_FILE)
-    subnets_ipsv4 = vpn_subnetv4.hosts()
-    subnets_ipsv6 = vpn_subnetv6.hosts()
-    server_ip = f'{str(next(subnets_ipsv4))}/{str(vpn_subnetv4.prefixlen)},' \
-                f'{str(next(subnets_ipsv6))}/{str(vpn_subnetv4.prefixlen)}'
+    subnet_ipsv4 = vpn_subnetv4.hosts()
+    subnet_ipsv6 = vpn_subnetv6.hosts()
+    server_ip = f'{str(next(subnet_ipsv4))}/{str(vpn_subnetv4.prefixlen)},' \
+                f'{str(next(subnet_ipsv6))}/{str(vpn_subnetv4.prefixlen)}'
     if not os.path.isfile(SERVER_CONFIGURATION_FILE):
         wg.create_server_configuration(server_ip, vpn_port)
 
         for peer_number in range(peers_count):
             peer_name: str = 'peer_' + str(peer_number)
-            client_ipv4 = str(next(subnets_ipsv4))
-            client_ipv6 = str(next(subnets_ipsv6))
+            client_ipv4 = str(next(subnet_ipsv4))
+            client_ipv6 = str(next(subnet_ipsv6))
             peer_ips: tuple = (f'{client_ipv4}/{str(vpn_subnetv4.prefixlen)},{client_ipv6}/{str(vpn_subnetv6.prefixlen)}',
                                f'{client_ipv4}/32,{client_ipv6}/128')
             vpn_address: str = vpn_domain_name + ':' + vpn_port
