@@ -87,9 +87,8 @@ def main():
     vpn_subnetv6 = ipaddress.ip_network((os.environ.get('INTERNAL_SUBNETv6', 'fc00:bfb7:3bdb:ae33::'), 120))
     vpn_port: str = os.environ.get('SERVERPORT', '51820')
     vpn_domain_name: str = os.environ.get('SERVERURL', '')
-    allowed_ipv4 = ipaddress.ip_network(os.environ.get('AllowedIPsv4', '0.0.0.0/0'))
-    allowed_ipv6 = ipaddress.ip_network(os.environ.get('AllowedIPsv6', '::/0'))
-    dns_server = ipaddress.ip_address(os.environ.get('PEERDNS', '77.88.8.8'))
+    allowed_ip = ipaddress.ip_network(os.environ.get('AllowedIPs', '0.0.0.0/0,::/0'))
+    dns_server = ipaddress.ip_address(os.environ.get('PEERDNS', '77.88.8.8,77.88.8.1,2a02:6b8::feed:0ff,2a02:6b8:0:1::feed:0ff'))
     peers_count: int = int(os.environ.get('PEERS', 1))
     wg = WireGuard(CONFIGURATION_DIR, SERVER_CONFIGURATION_FILE)
     subnets_ipsv4 = vpn_subnetv4.hosts()
@@ -98,7 +97,6 @@ def main():
                 f'{str(next(subnets_ipsv6))}/{str(vpn_subnetv4.prefixlen)}'
     if not os.path.isfile(SERVER_CONFIGURATION_FILE):
         wg.create_server_configuration(server_ip, vpn_port)
-        allowed_ip = str(allowed_ipv4) + ',' + str(allowed_ipv6)
 
         for peer_number in range(peers_count):
             peer_name: str = 'peer_' + str(peer_number)
@@ -111,6 +109,8 @@ def main():
         wg.write_file()
     else:
         log_gwg.error('Configuration is exist')
+        if len(os.listdir(CONFIGURATION_DIR)) != peers_count:
+            pass
 
 
 if __name__ == '__main__':
