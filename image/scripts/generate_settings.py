@@ -94,7 +94,7 @@ def main():
     subnet_ipsv4 = vpn_subnetv4.hosts()
     subnet_ipsv6 = vpn_subnetv6.hosts()
     server_ip = f'{str(next(subnet_ipsv4))}/{str(vpn_subnetv4.prefixlen)},' \
-                f'{str(next(subnet_ipsv6))}/{str(vpn_subnetv4.prefixlen)}'
+                f'{str(next(subnet_ipsv6))}/{str(vpn_subnetv6.prefixlen)}'
     if not os.path.isfile(SERVER_CONFIGURATION_FILE):
         wg.create_server_configuration(server_ip, vpn_port)
 
