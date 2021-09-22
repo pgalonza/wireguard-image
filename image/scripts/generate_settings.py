@@ -1,3 +1,4 @@
+import logging
 import os
 import ipaddress
 import wgconfig
@@ -71,29 +72,48 @@ class WireGuard(wgconfig.WGConfig):
             self.add_attr(client_public_key, attr_name, attr_value)
 
 
+def logging_configuration(logger):
+    sh_formatter = logging.Formatter(fmt='%(asctime)s %(levelname)s: %(process)d %(name)s %(funcName)s %(message)s',
+                                     datefmt='%m-%d-%Y %H:%M:%S', )
+    sh = logging.StreamHandler()
+    sh.setLevel(level=logging.INFO)
+    sh.setFormatter(sh_formatter)
+
+    logger.addHandler(sh)
+
+
 def main():
-    vpn_subnet = ipaddress.ip_network((os.environ.get('INTERNAL_SUBNET', '10.13.13.0'), 24))
+    vpn_subnetv4 = ipaddress.ip_network((os.environ.get('INTERNAL_SUBNETv4', '10.13.13.0'), 24))
+    vpn_subnetv6 = ipaddress.ip_network((os.environ.get('INTERNAL_SUBNETv6', 'fc00:bfb7:3bdb:ae33::'), 120))
     vpn_port: str = os.environ.get('SERVERPORT', '51820')
     vpn_domain_name: str = os.environ.get('SERVERURL', '')
-    allowed_ip = ipaddress.ip_network(os.environ.get('AllowedIPs', '0.0.0.0/0'))
+    allowed_ipv4 = ipaddress.ip_network(os.environ.get('AllowedIPsv4', '0.0.0.0/0'))
+    allowed_ipv6 = ipaddress.ip_network(os.environ.get('AllowedIPsv6', '::/0'))
     dns_server = ipaddress.ip_address(os.environ.get('PEERDNS', '77.88.8.8'))
     peers_count: int = int(os.environ.get('PEERS', 1))
     wg = WireGuard(CONFIGURATION_DIR, SERVER_CONFIGURATION_FILE)
-    subnets_ips = vpn_subnet.hosts()
-    server_ip = str(next(subnets_ips)) + '/' + str(vpn_subnet.prefixlen)
+    subnets_ipsv4 = vpn_subnetv4.hosts()
+    subnets_ipsv6 = vpn_subnetv6.hosts()
+    server_ip = f'{str(next(subnets_ipsv4))}/{str(vpn_subnetv4.prefixlen)},' \
+                f'{str(next(subnets_ipsv6))}/{str(vpn_subnetv4.prefixlen)}'
     if not os.path.isfile(SERVER_CONFIGURATION_FILE):
         wg.create_server_configuration(server_ip, vpn_port)
+        allowed_ip = str(allowed_ipv4) + ',' + str(allowed_ipv6)
 
         for peer_number in range(peers_count):
             peer_name: str = 'peer_' + str(peer_number)
-            client_ip = str(next(subnets_ips))
-            peer_ips: tuple = (client_ip + '/' + str(vpn_subnet.prefixlen), client_ip + '/32')
+            client_ipv4 = str(next(subnets_ipsv4))
+            client_ipv6 = str(next(subnets_ipsv6))
+            peer_ips: tuple = (f'{client_ipv4}/{str(vpn_subnetv4.prefixlen)},{client_ipv6}/{str(vpn_subnetv6.prefixlen)}',
+                               f'{client_ipv4}/32,{client_ipv6}/128')
             vpn_address: str = vpn_domain_name + ':' + vpn_port
-            wg.add_client(peer_name, peer_ips, dns_server, vpn_address, str(allowed_ip))
+            wg.add_client(peer_name, peer_ips, dns_server, vpn_address, allowed_ip)
         wg.write_file()
     else:
-        wg.read_file()
+        log_gwg.error('Configuration is exist')
 
 
 if __name__ == '__main__':
+    log_gwg = logging.getLogger('G_WG')
+    logging_configuration(log_gwg)
     main()
