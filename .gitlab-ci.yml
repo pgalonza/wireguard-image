@@ -4,7 +4,7 @@ workflow:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "tag" || $CI_COMMIT_REF_NAME == "master"'
       when: always
-    whhen: never
+    - when: never
 
 default:
   tags:
@@ -40,8 +40,8 @@ Deploy image:
     - chmod 644 ~/.ssh/known_hosts
     - ansible-playbook ./deploy-wireguard.yml -i ./production.yml
   rules:
-    - if: 'CI_COMMIT_REF_NAME == "master"'
+    - if: '$CI_COMMIT_REF_NAME == "master"'
       when: always
-    whhen: never
+    - when: never
   environment: production
-
+...
