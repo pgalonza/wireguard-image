@@ -87,8 +87,8 @@ def main():
     vpn_subnetv6 = ipaddress.ip_network((os.environ.get('INTERNAL_SUBNETv6', 'fc00:bfb7:3bdb:ae33::'), 120))
     vpn_port: str = os.environ.get('SERVERPORT', '51820')
     vpn_domain_name: str = os.environ.get('SERVERURL', '')
-    allowed_ip = ipaddress.ip_network(os.environ.get('AllowedIPs', '0.0.0.0/0,::/0'))
-    dns_server = ipaddress.ip_address(os.environ.get('PEERDNS', '77.88.8.8,77.88.8.1,2a02:6b8::feed:0ff,2a02:6b8:0:1::feed:0ff'))
+    allowed_ip = os.environ.get('AllowedIPs', '0.0.0.0/0,::/0')
+    dns_server = os.environ.get('PEERDNS', '77.88.8.8,77.88.8.1,2a02:6b8::feed:0ff,2a02:6b8:0:1::feed:0ff')
     peers_count: int = int(os.environ.get('PEERS', 1))
     wg = WireGuard(CONFIGURATION_DIR, SERVER_CONFIGURATION_FILE)
     subnet_ipsv4 = vpn_subnetv4.hosts()
@@ -110,7 +110,7 @@ def main():
     else:
         log_gwg.error('Configuration is exist')
         if len(os.listdir(CONFIGURATION_DIR)) != peers_count:
-            pass
+            log_gwg.info('We have new peers')
 
 
 if __name__ == '__main__':
