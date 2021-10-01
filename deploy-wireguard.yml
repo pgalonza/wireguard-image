@@ -52,6 +52,7 @@
           - /home/wireguard/config:/config
           - /lib/modules:/lib/modules
           - /usr/src/kernels:/usr/src/kernels
+        network: host
         ports:
           - "51820:51820/udp"
         env:
