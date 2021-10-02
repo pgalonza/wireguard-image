@@ -45,7 +45,7 @@
     - name: Run WireGuard container
       containers.podman.podman_container:
         name: wireguard
-        image: registry.gitlab.com/pgalonza/wireguard-image
+        image: registry.gitlab.com/pgalonza/wireguard-image:develop
         state: started
         privileged: yes
         volume:
