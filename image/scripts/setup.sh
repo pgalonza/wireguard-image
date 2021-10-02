@@ -80,3 +80,5 @@ useradd -o -u "${PUID}" -g "${PGID}" -s /bin/bash wireguard
 # permissions
 chown -R wireguard:wireguard /config/*
 
+/scripts/run.sh
+
