@@ -43,9 +43,10 @@ Deploy image:
     - chmod 644 ~/.ssh/known_hosts
     - ansible-playbook ./deploy-wireguard.yml -i ./production.yml
   rules:
-    - if: '$CI_COMMIT_REF_NAME == "master"'
-      when: always
+#    - if: '$CI_COMMIT_REF_NAME == "master"'
+#      when: always
     - if: '$CI_COMMIT_REF_NAME == "develop"'
-    - when: manual
+      when: manual
+    when: never
   environment: production
 ...
