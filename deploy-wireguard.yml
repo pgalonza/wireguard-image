@@ -4,6 +4,7 @@
   become: yes
   vars:
     ug_id: 1050
+    tag_name: develop
   vars_files:
     - "{{ lookup('env', 'ANSIBLE_VARIABLES') }}"
   tasks:
@@ -36,16 +37,16 @@
         state: absent
     - name: Remove an WireGuard image
       containers.podman.podman_image:
-        name: registry.gitlab.com/pgalonza/wireguard-image
+        name: "registry.gitlab.com/pgalonza/wireguard-image:{{ tag_name }}"
         state: absent
     - name: Pull a WireGuard latest image
       containers.podman.podman_image:
         name: registry.gitlab.com/pgalonza/wireguard-image
-        tag: develop
+        tag: {{ tag_name }}
     - name: Run WireGuard container
       containers.podman.podman_container:
         name: wireguard
-        image: registry.gitlab.com/pgalonza/wireguard-image:develop
+        image: "registry.gitlab.com/pgalonza/wireguard-image:{{ tag_name }}"
         state: started
         privileged: yes
         volume:
