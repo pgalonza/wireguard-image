@@ -21,7 +21,9 @@ Build image:
     - chmod +x ./image/wireguard.sh
     - ./image/wireguard.sh
 #    - buildah push $CI_REGISTRY_IMAGE $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
-    - export IMAGE_TAG_NAME=$(if [[ $CI_COMMIT_REF_NAME == "master" ]] ; then echo 'latest'; else echo $CI_COMMIT_TAG; fi)
+    - export IMAGE_TAG_NAME=$(if [[ $CI_COMMIT_REF_NAME == "master" ]] ;
+      then echo 'latest'; elif [[ $CI_COMMIT_REF_NAME == "develop" ]] ; echo develop;
+      elif [[ $CI_COMMIT_TAG ]]; echo $CI_COMMIT_TAG"; fi)
     - buildah push $CI_REGISTRY_IMAGE $CI_REGISTRY_IMAGE:$IMAGE_TAG_NAME
 
 Deploy image:

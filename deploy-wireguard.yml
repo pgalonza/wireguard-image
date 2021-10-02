@@ -41,7 +41,7 @@
     - name: Pull a WireGuard latest image
       containers.podman.podman_image:
         name: registry.gitlab.com/pgalonza/wireguard-image
-        tag: latest
+        tag: develop
     - name: Run WireGuard container
       containers.podman.podman_container:
         name: wireguard
