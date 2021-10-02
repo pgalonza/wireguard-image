@@ -108,7 +108,7 @@ def main():
             wg.add_client(peer_name, peer_ips, dns_server, vpn_address, allowed_ip)
         wg.write_file()
     else:
-        log_gwg.error('Configuration is exist')
+        log_gwg.info('Configuration is exist')
         if len(os.listdir(CONFIGURATION_DIR)) != peers_count:
             log_gwg.info('We have new peers')
 

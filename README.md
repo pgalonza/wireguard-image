@@ -17,8 +17,7 @@ sudo podman run -d \
 -e PEERS=1 `#optional` \
 -e INTERNAL_SUBNETv4=10.13.13.0 `#optional` \
 -e INTERNAL_SUBNETv6=fc00:bfb7:3bdb:ae33 `#optional` \
--e ALLOWEDIPSv4=0.0.0.0/0 `#optional` \
--e ALLOWEDIPSv6=::/0 `#optional` \
+-e ALLOWEDIPSv4=0.0.0.0/0,::/0 `#optional` \
 -p 51820:51820/udp \
 --privileged
 wireguard
