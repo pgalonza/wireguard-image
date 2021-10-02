@@ -1,6 +1,6 @@
 #!/usr/bin/env -S bash -x
 
-ctr1=$(buildah from "docker.io/centos:latest")
+ctr1=$(buildah from "registry.gitlab.com/pgalonza/basic-images/base-wireguard:latest")
 
 buildah run "$ctr1" -- dnf update -y
 buildah run "$ctr1" -- dnf install -y elfutils-libelf-devel pkgconfig "@Development Tools"

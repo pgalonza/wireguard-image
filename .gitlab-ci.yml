@@ -1,5 +1,3 @@
-image: centos:latest
-
 workflow:
   rules:
     - if: '$CI_COMMIT_TAG != null || $CI_COMMIT_REF_NAME == "master" || $CI_COMMIT_REF_NAME == "develop"'
@@ -14,6 +12,7 @@ variables:
   STORAGE_DRIVER: vfs
 
 Build image:
+  image: registry.gitlab.com/pgalonza/basic-images/base-buildah:latest
   stage: build
   script:
     - dnf -y install buildah
@@ -28,6 +27,7 @@ Build image:
     - buildah push $CI_REGISTRY_IMAGE $CI_REGISTRY_IMAGE:$IMAGE_TAG_NAME
 
 Deploy image:
+  image: registry.gitlab.com/pgalonza/basic-images/base-ansible:latest
   stage: deploy
   needs:
     - Build image
