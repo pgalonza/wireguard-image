@@ -9,7 +9,7 @@ default:
     - docker
 
 variables:
-  STORAGE_DRIVER: overlay
+  STORAGE_DRIVER: overlayfs
 
 Build image:
   image: registry.gitlab.com/pgalonza/basic-images/base-buildah:latest
