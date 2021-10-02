@@ -5,6 +5,8 @@ _term() {
   wg-quick down wg0
 }
 
+/scripts/setup.sh
+
 trap _term SIGTERM
 
 wg-quick up wg0

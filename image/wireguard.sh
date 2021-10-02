@@ -32,7 +32,7 @@ buildah run "$ctr1" -- /bin/sh -c 'echo "net.ipv4.conf.all.forwarding = 1" >> /e
 buildah run "$ctr1" -- /bin/sh -c 'echo "net.ipv6.conf.all.forwarding = 1" >> /etc/sysctl.d/99-custom.conf'
 
 ## Run our server and expose the port
-buildah config --cmd "/scripts/setup.sh" "$ctr1"
+buildah config --cmd "/scripts/run.sh" "$ctr1"
 buildah config --port 51820 "$ctr1"
 ## Commit this container to an image name
 buildah commit "$ctr1" "${CI_REGISTRY_IMAGE}"
