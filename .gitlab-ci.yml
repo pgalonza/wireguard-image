@@ -47,6 +47,6 @@ Deploy image:
 #      when: always
     - if: '$CI_COMMIT_REF_NAME == "develop"'
       when: manual
-    when: never
+    - when: never
   environment: production
 ...
