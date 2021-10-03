@@ -5,6 +5,7 @@
   vars:
     ug_id: 1050
     tag_name: develop
+    network_mode: bridge
   vars_files:
     - "{{ lookup('env', 'ANSIBLE_VARIABLES') }}"
   tasks:
@@ -55,6 +56,7 @@
           - /usr/src/kernels:/usr/src/kernels
         ports:
           - "51820:51820/udp"
+        network: "{{ network_mode }}"
         env:
           PUID: "{{ ug_id }}"
           PGID: "{{ ug_id }}"
