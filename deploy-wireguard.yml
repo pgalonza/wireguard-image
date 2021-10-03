@@ -50,7 +50,7 @@
         image: "registry.gitlab.com/pgalonza/wireguard-image:{{ tag_name }}"
         state: started
         sysctl:
-          - net.ipv4.conf.all.src_valid_mark=1
+          net.ipv4.conf.all.src_valid_mark: 1
         privileged: yes
         volume:
           - /home/wireguard/config:/config
