@@ -1,6 +1,8 @@
 import logging
 import os
 import ipaddress
+import sys
+
 import wgconfig
 import wgconfig.wgexec
 import qrcode
@@ -11,23 +13,38 @@ SERVER_CONFIGURATION_FILE = '/config/wg0.conf'
 
 class WireGuard(wgconfig.WGConfig):
     post_up: str = 'iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A ' \
-              'POSTROUTING -o eth0 -j MASQUERADE'
+              'POSTROUTING -o {} -j MASQUERADE'
     post_down: str = 'iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D ' \
-                     'POSTROUTING -o eth0 -j MASQUERADE'
+                     'POSTROUTING -o {} -j MASQUERADE'
 
     def __init__(self, configuration_dir, server_configuration_file):
         self.configuration_dir: str = configuration_dir
         super().__init__(server_configuration_file)
         self.server_public_key: str = str()
 
+    @staticmethod
+    def _get_interface_name():
+        interfaces_list = (
+            'eth0',
+            'ens3'
+        )
+        host_interfaces = os.listdir('/sys/class/net/')
+        for interface_name in interfaces_list:
+            if interface_name in host_interfaces:
+                return interface_name
+        else:
+            logging.critical('Cannot find interface name:\n %s', host_interfaces)
+            sys.exit()
+
     def create_server_configuration(self, server_ip, server_port):
         server_private_key, self.server_public_key, = wgconfig.wgexec.generate_keypair()
+        host_interface_name = self._get_interface_name()
         init_server_interface: dict = {
             'Address': server_ip,
             'SaveConfig': 'true',
             'ListenPort': server_port,
-            'PostUp': self.post_up,
-            'PostDown': self.post_down,
+            'PostUp': self.post_up.format(host_interface_name),
+            'PostDown': self.post_down.format(host_interface_name),
             'PrivateKey': server_private_key,
         }
 
