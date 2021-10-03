@@ -31,6 +31,7 @@ class WireGuard(wgconfig.WGConfig):
         host_interfaces = os.listdir('/sys/class/net/')
         for interface_name in interfaces_list:
             if interface_name in host_interfaces:
+                logging.info('Find %s interface', interface_name)
                 return interface_name
         else:
             logging.critical('Cannot find interface name:\n %s', host_interfaces)
