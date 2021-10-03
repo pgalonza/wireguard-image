@@ -31,10 +31,10 @@ class WireGuard(wgconfig.WGConfig):
         host_interfaces = os.listdir('/sys/class/net/')
         for interface_name in interfaces_list:
             if interface_name in host_interfaces:
-                logging.info('Find %s interface', interface_name)
+                log_gwg.info('Find %s interface', interface_name)
                 return interface_name
         else:
-            logging.critical('Cannot find interface name:\n %s', host_interfaces)
+            log_gwg.critical('Cannot find interface name:\n %s', host_interfaces)
             sys.exit()
 
     def create_server_configuration(self, server_ip, server_port):
@@ -97,6 +97,7 @@ def logging_configuration(logger):
     sh.setLevel(level=logging.INFO)
     sh.setFormatter(sh_formatter)
 
+    logger.setLevel(logging.DEBUG)
     logger.addHandler(sh)
 
 
