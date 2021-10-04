@@ -5,7 +5,7 @@
   vars:
     ug_id: 1050
     tag_name: develop
-    network_mode: host
+    network_mode: bridge
   vars_files:
     - "{{ lookup('env', 'ANSIBLE_VARIABLES') }}"
   tasks:
@@ -49,15 +49,15 @@
         name: wireguard
         image: "registry.gitlab.com/pgalonza/wireguard-image:{{ tag_name }}"
         state: started
-#        sysctl:
-#          net.ipv4.conf.all.src_valid_mark: 1
+        sysctl:
+          net.ipv4.conf.all.src_valid_mark: 1
         privileged: yes
         volume:
           - /home/wireguard/config:/config
           - /lib/modules:/lib/modules
           - /usr/src/kernels:/usr/src/kernels
-#        ports:
-#          - "51820:51820/udp"
+        ports:
+          - "51820:51820/udp"
         network: "{{ network_mode }}"
         env:
           PUID: "{{ ug_id }}"
