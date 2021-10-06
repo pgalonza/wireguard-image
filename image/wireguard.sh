@@ -30,6 +30,7 @@ buildah run "$ctr1" -- /bin/sh -c 'chmod +x /scripts/*'
 buildah run "$ctr1" -- /bin/sh -c 'echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.d/99-custom.conf'
 buildah run "$ctr1" -- /bin/sh -c 'echo "net.ipv4.conf.all.forwarding = 1" >> /etc/sysctl.d/99-custom.conf'
 buildah run "$ctr1" -- /bin/sh -c 'echo "net.ipv6.conf.all.forwarding = 1" >> /etc/sysctl.d/99-custom.conf'
+buildah run "$ctr1" -- /bin/sh -c 'echo "net.ipv6.conf.default.forwarding = 1" >> /etc/sysctl.d/99-custom.conf'
 
 ## Run our server and expose the port
 buildah config --cmd "/scripts/run.sh" "$ctr1"

@@ -12,10 +12,14 @@ SERVER_CONFIGURATION_FILE = '/config/wg0.conf'
 
 
 class WireGuard(wgconfig.WGConfig):
-    post_up: str = 'iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A ' \
-              'POSTROUTING -o {} -j MASQUERADE'
-    post_down: str = 'iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D ' \
-                     'POSTROUTING -o {} -j MASQUERADE'
+    post_up: str = 'iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT;' \
+                   'iptables -t nat -A POSTROUTING -o {0} -j MASQUERADE;' \
+                   'ip6tables -A FORWARD -i %i -j ACCEPT; ip6tables -A FORWARD -o %i -j ACCEPT;' \
+                   'ip6tables -t nat -A POSTROUTING -o {0} -j MASQUERADE'
+    post_down: str = 'iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT;' \
+                     'iptables -t nat -D POSTROUTING -o {0} -j MASQUERADE;' \
+                     'ip6tables -D FORWARD -i %i -j ACCEPT; ip6tables -D FORWARD -o %i -j ACCEPT;' \
+                     'ip6tables -t nat -D POSTROUTING -o {0} -j MASQUERADE'
 
     def __init__(self, configuration_dir, server_configuration_file):
         self.configuration_dir: str = configuration_dir
@@ -103,7 +107,7 @@ def logging_configuration(logger):
 
 def main():
     vpn_subnetv4 = ipaddress.ip_network((os.environ.get('INTERNAL_SUBNETv4', '10.13.13.0'), 24))
-    vpn_subnetv6 = ipaddress.ip_network((os.environ.get('INTERNAL_SUBNETv6', 'fc00:bfb7:3bdb:ae33::'), 120))
+    vpn_subnetv6 = ipaddress.ip_network((os.environ.get('INTERNAL_SUBNETv6', 'fc00:bfb7:3bdb:ae33::'), 64))
     vpn_port: str = os.environ.get('SERVERPORT', '51820')
     vpn_domain_name: str = os.environ.get('SERVERURL', '')
     allowed_ip = os.environ.get('AllowedIPs', '0.0.0.0/0,::/0')
