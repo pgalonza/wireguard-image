@@ -80,3 +80,5 @@ useradd -o -u "${PUID}" -g "${PGID}" -s /bin/bash wireguard
 # permissions
 chown -R wireguard:wireguard /config/*
 
+sysctl -p /etc/sysctl.d/99-custom.conf
+
