@@ -20,7 +20,7 @@ Unit Test:
   image: python:3.9.2-alpine
   stage: test
   script:
-    - pip3 install --upgrade pip3
+    - pip3 install --upgrade pip
     - pip3 install -r wireguard-requirements.txt
     - python3 -m unittest discover image/scripts
 
