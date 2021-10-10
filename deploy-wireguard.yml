@@ -40,6 +40,11 @@
       containers.podman.podman_image:
         name: "registry.gitlab.com/pgalonza/wireguard-image:{{ tag_name }}"
         state: absent
+    - name: Adding container network
+        containers.podman.podman_network:
+          name: wireguard
+          ipv6: yes
+          subnet: 'fc00:bfb7:3bdb:ae34::/64'
     - name: Pull a WireGuard latest image
       containers.podman.podman_image:
         name: registry.gitlab.com/pgalonza/wireguard-image
