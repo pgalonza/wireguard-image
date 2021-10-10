@@ -17,12 +17,12 @@ variables:
   STORAGE_DRIVER: vfs
 
 Unit Test:
-  image: python:3.9.2-alpine
+  image: python:3.9.2-alpine3.13
   stage: test
   script:
-    - pip3 install --upgrade pip
-    - pip3 install -r wireguard-requirements.txt
-    - python3 -m unittest discover image/scripts
+    - pip install --upgrade pip
+    - pip install -r wireguard-requirements.txt
+    - python -m unittest discover image/scripts
 
 Build image:
   image: registry.gitlab.com/pgalonza/basic-images/base-buildah:latest
