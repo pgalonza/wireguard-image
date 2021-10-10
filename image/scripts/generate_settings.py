@@ -25,25 +25,32 @@ class WireGuard(wgconfig.WGConfig):
         self.configuration_dir: str = configuration_dir
         super().__init__(server_configuration_file)
         self.server_public_key: str = str()
+        self.log_gwg = logging.getLogger('CLASS_GWG')
+        logging_configuration(self.log_gwg)
 
-    @staticmethod
-    def _get_interface_name():
+    def _get_interface_name(self):
         interfaces_list = (
             'eth0',
             'ens3'
         )
+
         host_interfaces = os.listdir('/sys/class/net/')
         for interface_name in interfaces_list:
             if interface_name in host_interfaces:
-                log_gwg.info('Find %s interface', interface_name)
-                return interface_name
+                self.log_gwg.info('Find %s interface', interface_name)
+                result = interface_name
+                break
         else:
-            log_gwg.critical('Cannot find interface name:\n %s', host_interfaces)
-            sys.exit()
+            self.log_gwg.error('Cannot find interface name:\n %s', host_interfaces)
+            result = None
+
+        return result
 
     def create_server_configuration(self, server_ip, server_port):
         server_private_key, self.server_public_key, = wgconfig.wgexec.generate_keypair()
         host_interface_name = self._get_interface_name()
+        if not host_interface_name:
+            raise Exception('Not found server interface')
         init_server_interface: dict = {
             'Address': server_ip,
             'SaveConfig': 'true',
@@ -131,12 +138,12 @@ def main():
             wg.add_client(peer_name, peer_ips, dns_server, vpn_address, allowed_ip)
         wg.write_file()
     else:
-        log_gwg.info('Configuration is exist')
+        log_mgwg.info('Configuration is exist')
         if len(os.listdir(CONFIGURATION_DIR)) != peers_count:
-            log_gwg.info('We have new peers')
+            log_mgwg.info('We have new peers')
 
 
 if __name__ == '__main__':
-    log_gwg = logging.getLogger('G_WG')
-    logging_configuration(log_gwg)
+    log_mgwg = logging.getLogger('MAIN_GWG')
+    logging_configuration(log_mgwg)
     main()

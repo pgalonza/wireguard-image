@@ -8,8 +8,20 @@ default:
   tags:
     - docker
 
+stages:
+  - test
+  - build
+  - deploy
+
 variables:
   STORAGE_DRIVER: vfs
+
+Unit Test:
+  image: python:3.9-alpine
+  stage: test
+  script:
+    - pip install -r wireguard-requirements.txt
+    - python -m unittest discover image/scripts
 
 Build image:
   image: registry.gitlab.com/pgalonza/basic-images/base-buildah:latest
