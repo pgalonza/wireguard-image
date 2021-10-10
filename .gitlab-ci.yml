@@ -20,7 +20,7 @@ Unit Test:
   image: python:3.9.2-alpine
   stage: test
   script:
-    - apk add zlib-dev
+    - apk add jpeg-dev zlib-dev
     - pip install --upgrade pip
     - pip install -r wireguard-requirements.txt
     - python -m unittest discover image/scripts
