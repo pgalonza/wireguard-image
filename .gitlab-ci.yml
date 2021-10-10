@@ -17,7 +17,7 @@ variables:
   STORAGE_DRIVER: vfs
 
 Unit Test:
-  image: python:3.6-alpine
+  image: python:3.9.2-alpine
   stage: test
   script:
     - pip install --upgrade pip
