@@ -20,9 +20,9 @@ Unit Test:
   image: python:3.9.2-alpine
   stage: test
   script:
-    - pip install --upgrade pip
-    - pip install -r wireguard-requirements.txt
-    - python -m unittest discover image/scripts
+    - pip3 install --upgrade pip3
+    - pip3 install -r wireguard-requirements.txt
+    - python3 -m unittest discover image/scripts
 
 Build image:
   image: registry.gitlab.com/pgalonza/basic-images/base-buildah:latest
