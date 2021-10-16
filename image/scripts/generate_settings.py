@@ -1,3 +1,7 @@
+"""
+Generate settings for WireGuard.
+"""
+
 import logging
 import os
 import ipaddress

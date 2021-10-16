@@ -31,8 +31,10 @@ PyLint:
   script:
     - pip install --upgrade pip
     - pip install pylint==2.11.1
+    - pip install -r wireguard-requirements.txt
     - python -m pylint
       ./image/scripts/generate_settings.py
+    allow_failure: true
 
 Flake8:
   image: python:3.9.2-alpine
@@ -40,7 +42,7 @@ Flake8:
   script:
     - pip install --upgrade pip
     - pip install flake8==4.0.1
-    - python -m flake8
+    - python -m flake8 --ignore=E501
       ./image/scripts/generate_settings.py
 
 Yaml Lint:
@@ -49,7 +51,7 @@ Yaml Lint:
   script:
     - pip install --upgrade pip
     - pip install yamllint==1.26.3
-    - find . -type f -name *.yaml -o *.yml -exec python -m yamllint {} \;
+    - find . -type f -name "*.yaml" -o -name "*.yml" -exec python -m yamllint {} \;
 
 Ansible Lint:
   image: python:3.9.2-alpine
@@ -57,6 +59,7 @@ Ansible Lint:
   script:
     - pip install --upgrade pip
     - pip install ansible-lint==5.2.0
+    - pip insall ansible==4.7.0
     - ansible-lint -p
       ./configure-vds.yml
       ./deploy-wireguard.yml
