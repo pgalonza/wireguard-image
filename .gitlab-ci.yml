@@ -34,7 +34,7 @@ PyLint:
     - pip install -r wireguard-requirements.txt
     - python -m pylint
       ./image/scripts/generate_settings.py
-    allow_failure: true
+  allow_failure: true
 
 Flake8:
   image: python:3.9.2-alpine
