@@ -1,5 +1,4 @@
 import logging
-import sys
 import unittest
 import unittest.mock
 import generate_settings
@@ -34,22 +33,25 @@ class TestGS(unittest.TestCase):
 
     def test_server_configuration(self):
         with unittest.mock.patch('generate_settings.wgconfig.wgexec.generate_keypair') as gk_mock:
+            gk_mock.return_value = ('private_key', 'public_key')
             with unittest.mock.patch('generate_settings.wgconfig.WGConfig.write_file'):
                 mock_gin = unittest.mock.Mock()
                 mock_gin.return_value = 'eth0'
-                gk_mock.return_value = ('private_key', 'public_key')
                 wg_interface = generate_settings.WireGuard('', '')
                 wg_interface._get_interface_name = mock_gin
-                wg_interface.create_server_configuration('127.0.0.1', 51820)
+                wg_interface.create_server_configuration('127.0.0.1', '51820')
                 self.assertEqual(len(wg_interface.lines), 7)
 
     def test_client_configuration(self):
-        with unittest.mock.patch('generate_settings.wgconfig.WGConfig.write_file'):
-            with unittest.mock.patch('generate_settings.os.mkdir'):
-                with unittest.mock.patch('qrcode.make'):
-                    wg_interface = generate_settings.WireGuard('', '')
-                    wg_interface.server_public_key = 'public_key'
-                    wg_interface.add_client('peer_test', '127.0.0.1', '8.8.8.8', 'test.local', '0.0.0.0, ::/0')
+        with unittest.mock.patch('generate_settings.wgconfig.wgexec.generate_keypair') as gk_mock:
+            gk_mock.return_value = ('private_key', 'public_key')
+            with unittest.mock.patch('generate_settings.wgconfig.WGConfig.write_file'):
+                with unittest.mock.patch('generate_settings.os.mkdir'):
+                    with unittest.mock.patch('qrcode.make'):
+                        wg_interface = generate_settings.WireGuard('', '')
+                        wg_interface.server_public_key = 'public_key'
+                        wg_interface.add_client('peer_test', ('192.168.0.2/24', '192.168.0.2/32',),
+                                                '8.8.8.8', 'test.local', '0.0.0.0, ::/0')
 
 
 if __name__ == "__main__":
