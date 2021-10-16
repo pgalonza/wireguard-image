@@ -26,7 +26,8 @@ cd /app; \
 git clone -b $WGDASHBOARD_RELEASE https://github.com/donaldzou/WGDashboard.git wgdashboard && \
 cd ./wgdashboard/src; \
 rm ./db/hi.txt >  /dev/null 2>&1; \
-chmod u+x wgd.sh; \'
+chmod u+x wgd.sh; \
+chmod -R 755 /etc/wireguard'
 buildah run "$ctr1" -- pip3 install -r /app/wgdashboard/src/requirements.txt
 buildah copy "$ctr1" './image/scripts' '/scripts'
 buildah copy "$ctr1" './wireguard-requirements.txt' '/app/wireguard-requirements.txt'
