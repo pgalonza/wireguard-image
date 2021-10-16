@@ -59,7 +59,7 @@ Ansible Lint:
   script:
     - pip install --upgrade pip
     - pip install ansible-lint==5.2.0
-    - pip insall ansible==4.7.0
+    - pip install ansible==4.7.0
     - ansible-lint -p
       ./configure-vds.yml
       ./deploy-wireguard.yml
