@@ -63,8 +63,20 @@ Ansible Lint:
     - pip install cffi
     - pip install ansible==4.7.0
     - ansible-lint -p
-      ./configure-vds.yaml
-      ./deploy-wireguard.yaml
+      ./configure-vds.yml
+      ./deploy-wireguard.yml
+
+Ansible Check:
+  image: python:3.9.2-alpine
+  stage: test
+  script:
+    - apk update && apk add --no-cache musl-dev libffi-dev openssl-dev make gcc git
+    - pip install --upgrade pip
+    - pip install ansible-lint==5.2.0
+    - pip install cffi
+    - pip install ansible==4.7.0
+    - ansible-playbook ./deploy-wireguard.yml --syntax-check
+    - ansible-playbook ./configure-vds.yml --syntax-check
 
 Build image:
   image: registry.gitlab.com/pgalonza/basic-images/base-buildah:latest
@@ -96,7 +108,7 @@ Deploy image:
     - chmod 700 ~/.ssh
     - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
-    - ansible-playbook ./deploy-wireguard.yaml -i ./production.yaml
+    - ansible-playbook ./deploy-wireguard.yml -i ./production.yml
   rules:
 #    - if: '$CI_COMMIT_REF_NAME == "master"'
 #      when: always
