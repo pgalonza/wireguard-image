@@ -1,3 +1,4 @@
+import logging
 import sys
 import unittest
 import unittest.mock
@@ -5,6 +6,10 @@ import generate_settings
 
 
 class TestGS(unittest.TestCase):
+
+    def setUp(self) -> None:
+        generate_settings.logging.disable(logging.INFO)
+        generate_settings.logging.disable(logging.ERROR)
 
     def test_interface_name_eth(self):
         with unittest.mock.patch('generate_settings.os.listdir') as ld_mock:
@@ -36,7 +41,6 @@ class TestGS(unittest.TestCase):
                 wg_interface = generate_settings.WireGuard('', '')
                 wg_interface._get_interface_name = mock_gin
                 wg_interface.create_server_configuration('127.0.0.1', 51820)
-                print(wg_interface.lines)
                 self.assertEqual(len(wg_interface.lines), 7)
 
     def test_client_configuration(self):
