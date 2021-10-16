@@ -51,7 +51,7 @@ Yaml Lint:
   script:
     - pip install --upgrade pip
     - pip install yamllint==1.26.3
-    -  python -m yamllint {} \;
+    - find . -type f -name "*.yaml" -o -name "*.yml" -exec python -m yamllint {} \;
 
 Ansible Lint:
   image: registry.gitlab.com/pgalonza/basic-images/base-ansible:latest
