@@ -57,18 +57,17 @@ Ansible Lint:
   image: registry.gitlab.com/pgalonza/basic-images/base-ansible:latest
   stage: test
   script:
-    - pip install --upgrade pip
-    - pip install ansible-lint==5.2.0
+    - pip3 install --upgrade pip
+    - pip3 install ansible-lint==5.2.0
     - ansible-lint -p
-      ./configure-vds.yml
       ./deploy-wireguard.yml
 
 Ansible Check:
   image: registry.gitlab.com/pgalonza/basic-images/base-ansible:latest
   stage: test
   script:
-    - ansible-playbook ./deploy-wireguard.yml --syntax-check
-    - ansible-playbook ./configure-vds.yml --syntax-check
+    - ansible-playbook ./deploy-wireguard.yml -i ./production.yml --syntax-check
+    - ansible-playbook ./configure-vds.yml -i ./production.yml --syntax-check
 
 Build image:
   image: registry.gitlab.com/pgalonza/basic-images/base-buildah:latest
