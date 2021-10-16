@@ -1,4 +1,3 @@
----
 - name: Install WireGuard
   hosts: vds
   become: yes
@@ -82,4 +81,3 @@
         state: enabled
         immediate: yes
       listen: enable_wireguard
-...
