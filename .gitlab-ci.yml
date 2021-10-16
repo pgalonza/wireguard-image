@@ -57,7 +57,7 @@ Ansible Lint:
   image: python:3.9.2-alpine
   stage: test
   script:
-    - apk add gcc
+    - apk add zlib-dev gcc musl-dev
     - pip install --upgrade pip
     - pip install ansible-lint==5.2.0
     - pip install ansible==4.7.0
