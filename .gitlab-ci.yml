@@ -54,27 +54,19 @@ Yaml Lint:
     - find . -type f -name "*.yaml" -o -name "*.yml" -exec python -m yamllint {} \;
 
 Ansible Lint:
-  image: python:3.9.2-alpine
+  image: registry.gitlab.com/pgalonza/basic-images/base-ansible:latest
   stage: test
   script:
-    - apk update && apk add --no-cache musl-dev libffi-dev openssl-dev make gcc git
     - pip install --upgrade pip
     - pip install ansible-lint==5.2.0
-    - pip install cffi
-    - pip install ansible==4.7.0
     - ansible-lint -p
       ./configure-vds.yml
       ./deploy-wireguard.yml
 
 Ansible Check:
-  image: python:3.9.2-alpine
+  image: registry.gitlab.com/pgalonza/basic-images/base-ansible:latest
   stage: test
   script:
-    - apk update && apk add --no-cache musl-dev libffi-dev openssl-dev make gcc git
-    - pip install --upgrade pip
-    - pip install ansible-lint==5.2.0
-    - pip install cffi
-    - pip install ansible==4.7.0
     - ansible-playbook ./deploy-wireguard.yml --syntax-check
     - ansible-playbook ./configure-vds.yml --syntax-check
 
