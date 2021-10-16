@@ -25,6 +25,43 @@ Unit Test:
     - pip install -r wireguard-requirements.txt
     - python -m unittest discover image/scripts
 
+PyLint:
+  image: python:3.9.2-alpine
+  stage: test
+  script:
+    - pip install --upgrade pip
+    - pip install pylint==2.11.1
+    - python -m pylint
+      ./image/scripts/generate_settings.py
+
+Flake8:
+  image: python:3.9.2-alpine
+  stage: test
+  script:
+    - pip install --upgrade pip
+    - pip install flake8==4.0.1
+    - python -m flake8
+      ./image/scripts/generate_settings.py
+
+Yaml Lint:
+  image: python:3.9.2-alpine
+  stage: test
+  script:
+    - pip install --upgrade pip
+    - pip install yamllint==1.26.3
+    - find . -type f -name *.yaml -o *.yml -exec python -m yamllint {} \;
+
+Ansible Lint:
+  image: python:3.9.2-alpine
+  stage: test
+  script:
+    - pip install --upgrade pip
+    - pip install ansible-lint==5.2.0
+    - ansible-lint -p
+      ./configure-vds.yml
+      ./deploy-wireguard.yml
+      ./production.yml
+
 Build image:
   image: registry.gitlab.com/pgalonza/basic-images/base-buildah:latest
   stage: build
