@@ -102,7 +102,7 @@ Deploy image:
       then echo 'latest'; elif [[ $CI_COMMIT_TAG ]] ;
       then echo $CI_COMMIT_TAG; else echo $CI_COMMIT_REF_NAME; fi)
     - ansible-playbook ./deploy-wireguard.yml -i ./production.yml
-      --extra-vars '{"image_tag":"$IMAGE_TAG_NAME"}'
+      --extra-vars "{\"image_tag\":\"$IMAGE_TAG_NAME\"}"
   when: manual
   environment: production
 ...
