@@ -103,11 +103,6 @@ Deploy image:
       then echo $CI_COMMIT_TAG; else echo $CI_COMMIT_REF_NAME; fi)
     - ansible-playbook ./deploy-wireguard.yml -i ./production.yml
       --extra-vars '{"image_tag":"$IMAGE_TAG_NAME"}'
-  rules:
-#    - if: '$CI_COMMIT_REF_NAME == "master"'
-#      when: always
-    - if: '$CI_COMMIT_REF_NAME == "develop"'
-      when: manual
-    - when: never
+  when: manual
   environment: production
 ...
