@@ -4,7 +4,6 @@
   become: yes
   vars:
     ug_id: 1050
-    tag_name: develop
     network_mode: wireguard
   vars_files:
     - "{{ lookup('env', 'ANSIBLE_VARIABLES') }}"

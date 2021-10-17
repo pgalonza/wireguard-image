@@ -73,14 +73,13 @@ Build image:
   image: registry.gitlab.com/pgalonza/basic-images/base-buildah:latest
   stage: build
   script:
-    - dnf -y install buildah
+#    - dnf -y install buildah
     - buildah login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - chmod +x ./image/wireguard.sh
     - ./image/wireguard.sh
 #    - buildah push $CI_REGISTRY_IMAGE $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
     - export IMAGE_TAG_NAME=$(if [[ $CI_COMMIT_REF_NAME == "master" ]] ;
-      then echo 'latest'; elif [[ $CI_COMMIT_REF_NAME == "develop" ]] ;
-      then echo develop; elif [[ $CI_COMMIT_TAG ]] ;
+      then echo 'latest'; elif [[ $CI_COMMIT_TAG ]] ;
       then echo $CI_COMMIT_TAG; else echo $CI_COMMIT_REF_NAME; fi)
     - buildah push $CI_REGISTRY_IMAGE $CI_REGISTRY_IMAGE:$IMAGE_TAG_NAME
 
@@ -90,8 +89,8 @@ Deploy image:
   needs:
     - Build image
   script:
-    - dnf install -y python39 openssh-clients
-    - pip3 install ansible
+#    - dnf install -y python39 openssh-clients
+#    - pip3 install ansible
     - ansible-galaxy collection install containers.podman
     - eval $(ssh-agent -s)
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
@@ -99,7 +98,11 @@ Deploy image:
     - chmod 700 ~/.ssh
     - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
+    - export IMAGE_TAG_NAME=$(if [[ $CI_COMMIT_REF_NAME == "master" ]] ;
+      then echo 'latest'; elif [[ $CI_COMMIT_TAG ]] ;
+      then echo $CI_COMMIT_TAG; else echo $CI_COMMIT_REF_NAME; fi)
     - ansible-playbook ./deploy-wireguard.yml -i ./production.yml
+      --extra-vars '{"image_tag":"$IMAGE_TAG_NAME"}'
   rules:
 #    - if: '$CI_COMMIT_REF_NAME == "master"'
 #      when: always
