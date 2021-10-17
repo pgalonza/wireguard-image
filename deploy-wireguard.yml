@@ -16,6 +16,14 @@
       notify:
         - reload_firewalld
         - enable_wireguard
+    - name: Add wireguard dashboard to firewall service
+      ansible.builtin.copy:
+        src: ./files/wireguard.xml
+        dest: /etc/firewalld/services/wgdashboard.xml
+        mode: '0644'
+      notify:
+        - reload_firewalld
+        - enable_wgdashboard
     - name: Add WireGuard service user
       ansible.builtin.user:
         name: wireguard
@@ -63,6 +71,7 @@
           - /usr/src/kernels:/usr/src/kernels
         ports:
           - "51820:51820/udp"
+          - "10086:10086/tcp"
         network: "{{ network_mode }}"
         env:
           PUID: "{{ ug_id }}"
@@ -81,5 +90,12 @@
         permanent: yes
         state: enabled
         immediate: yes
-      listen: enable_wireguard
+    - name: Enable wireguard dashboard service
+      ansible.posix.firewalld:
+        zone: public
+        service: wireguard
+        permanent: yes
+        state: enabled
+        immediate: yes
+      listen: enable_wgdashboard
 ...

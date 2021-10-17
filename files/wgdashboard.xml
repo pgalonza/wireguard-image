@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>wgdashboard</short>
+  <description>WireGuard Dashboard open TCP port 10086 for client connections</description>
+  <port protocol="tcp" port="10086"/>
+</service>
