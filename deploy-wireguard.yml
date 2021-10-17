@@ -38,7 +38,7 @@
         state: absent
     - name: Remove an WireGuard image
       containers.podman.podman_image:
-        name: "registry.gitlab.com/pgalonza/wireguard-image:{{ tag_name }}"
+        name: "registry.gitlab.com/pgalonza/wireguard-image:{{ image_tag }}"
         state: absent
     - name: Adding container network
       containers.podman.podman_network:
@@ -48,11 +48,11 @@
     - name: Pull a WireGuard latest image
       containers.podman.podman_image:
         name: registry.gitlab.com/pgalonza/wireguard-image
-        tag: "{{ tag_name }}"
+        tag: "{{ image_tag }}"
     - name: Run WireGuard container
       containers.podman.podman_container:
         name: wireguard
-        image: "registry.gitlab.com/pgalonza/wireguard-image:{{ tag_name }}"
+        image: "registry.gitlab.com/pgalonza/wireguard-image:{{ image_tag }}"
         state: started
         sysctl:
           net.ipv4.conf.all.src_valid_mark: 1
