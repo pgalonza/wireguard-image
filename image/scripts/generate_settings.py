@@ -41,11 +41,11 @@ class WireGuard(wgconfig.WGConfig):
     post_up: str = 'iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT;' \
                    'iptables -t nat -A POSTROUTING -o {0} -j MASQUERADE;' \
                    'ip6tables -A FORWARD -i %i -j ACCEPT; ip6tables -A FORWARD -o %i -j ACCEPT;' \
-                   'ip6tables -t nat -A POSTROUTING -o {0} -j MASQUERADE; /app/wgdashboard/wgd.sh start'
+                   'ip6tables -t nat -A POSTROUTING -o {0} -j MASQUERADE'
     post_down: str = 'iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT;' \
                      'iptables -t nat -D POSTROUTING -o {0} -j MASQUERADE;' \
                      'ip6tables -D FORWARD -i %i -j ACCEPT; ip6tables -D FORWARD -o %i -j ACCEPT;' \
-                     'ip6tables -t nat -D POSTROUTING -o {0} -j MASQUERADE; /app/wgdashboard/wgd.sh stop'
+                     'ip6tables -t nat -D POSTROUTING -o {0} -j MASQUERADE'
 
     def __init__(self, configuration_dir, server_configuration_file):
         """
