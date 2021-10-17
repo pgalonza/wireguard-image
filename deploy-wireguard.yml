@@ -18,7 +18,7 @@
         - enable_wireguard
     - name: Add wireguard dashboard to firewall service
       ansible.builtin.copy:
-        src: ./files/wireguard.xml
+        src: ./files/wgdashboard.xml
         dest: /etc/firewalld/services/wgdashboard.xml
         mode: '0644'
       notify:
@@ -93,7 +93,7 @@
     - name: Enable wireguard dashboard service
       ansible.posix.firewalld:
         zone: public
-        service: wireguard
+        service: wgdashboard
         permanent: yes
         state: enabled
         immediate: yes
