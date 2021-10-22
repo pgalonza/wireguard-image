@@ -6,6 +6,7 @@ _term() {
   wg-quick down wg0
 }
 export ENVIRONMENT=production
+export CONFIGURATION_PATH=/config
 
 /scripts/setup.sh
 
