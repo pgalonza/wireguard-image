@@ -2,7 +2,7 @@
 
 _term() {
   echo "Caught SIGTERM signal!"
-  cd /app/wgdashboard/src/ && ./wgd.sh stop; cd /
+  cd /app/wgdashboard/src/ && ./wgd.sh stop
   wg-quick down wg0
 }
 export ENVIRONMENT=production
@@ -14,7 +14,7 @@ trap _term SIGTERM
 
 wg-quick up wg0
 
-cd /app/wgdashboard/src/ && ./wgd.sh start; cd /
+cd /app/wgdashboard/src/ && ./wgd.sh start
 
 sleep infinity &
 
