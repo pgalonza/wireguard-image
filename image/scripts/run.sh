@@ -5,6 +5,7 @@ _term() {
   /app/wgdashboard/wgd.sh stop
   wg-quick down wg0
 }
+export ENVIRONMENT=production
 
 /scripts/setup.sh
 

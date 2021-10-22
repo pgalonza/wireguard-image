@@ -21,9 +21,11 @@ rm -rf \
 /app/wireguard-tools \
 /tmp/* \
 /var/tmp/*'
-buildah run "$ctr1" -- /bin/bash -c 'WGDASHBOARD_RELEASE=$(curl -sX GET https://github.com/donaldzou/WGDashboard/releases/latest | grep -oE "v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}"); \
+# Wait when accept pull requests
+# WGDASHBOARD_RELEASE=$(curl -sX GET https://github.com/donaldzou/WGDashboard/releases/latest | grep -oE "v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}");
+buildah run "$ctr1" -- /bin/bash -c 'WGDASHBOARD_RELEASE=develop; \
 cd /app; \
-git clone -b $WGDASHBOARD_RELEASE https://github.com/donaldzou/WGDashboard.git wgdashboard && \
+git clone -b $WGDASHBOARD_RELEASE https://github.com/pgalonza/WGDashboard.git wgdashboard && \
 cd ./wgdashboard/src; \
 rm ./db/hi.txt >  /dev/null 2>&1; \
 chmod u+x wgd.sh; \
