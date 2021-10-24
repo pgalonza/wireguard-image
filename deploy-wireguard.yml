@@ -8,7 +8,7 @@
   vars_files:
     - "{{ lookup('env', 'ANSIBLE_VARIABLES') }}"
   tasks:
-    - name: Enable wireguard dashboard service
+    - name: Enable http port for certbot
       ansible.posix.firewalld:
         zone: public
         service: http
