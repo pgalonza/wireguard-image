@@ -11,8 +11,8 @@ import wgconfig
 import wgconfig.wgexec
 import qrcode
 
-CONFIGURATION_DIR = '/config'
-SERVER_CONFIGURATION_FILE = '/config/wg0.conf'
+CONFIGURATION_DIR = os.getenv('CONFIGURATION_PATH', '/config')
+SERVER_CONFIGURATION_FILE = os.path.join(CONFIGURATION_DIR, 'wg0.conf')
 
 
 class WireGuard(wgconfig.WGConfig):
