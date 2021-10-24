@@ -7,6 +7,7 @@ _term() {
 }
 export ENVIRONMENT=production
 export CONFIGURATION_PATH=/config
+export SSL=true
 
 /scripts/setup.sh
 
