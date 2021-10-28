@@ -186,7 +186,9 @@ class WireGuard(wgconfig.WGConfig):
         for attr_name, attr_value in init_server_peer.items():
             self.add_attr(client_public_key, attr_name, attr_value)
 
-        db = tinydb.TinyDB(os.path.join(self.configuration_dir), 'db', 'wg0.json')
+        if not os.path.isdir(os.path.join(self.configuration_dir, 'db')):
+            os.mkdir(os.path.join(self.configuration_dir, 'db'))
+        db = tinydb.TinyDB(os.path.join(self.configuration_dir, 'db', 'wg0.json'))
         db_data: dict = {
             "id": client_public_key,
             "name": client_name,
