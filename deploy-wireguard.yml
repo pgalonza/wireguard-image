@@ -86,6 +86,10 @@
           PGID: "{{ ug_id }}"
           SERVERURL: "{{ vpn_urls[groups['vds'].index(inventory_hostname)] }}"
           PEERS: "{{ peers_count }}"
+          ENVIRONMENT: production
+          CONFIGURATION_PATH: /config
+          SSL: true
+
 
   handlers:
     - name: Restart firewalld service

@@ -5,9 +5,6 @@ _term() {
   cd /app/wgdashboard/src/ && ./wgd.sh stop
   wg-quick down wg0
 }
-export ENVIRONMENT=production
-export CONFIGURATION_PATH=/config
-export SSL=true
 
 /scripts/setup.sh
 
