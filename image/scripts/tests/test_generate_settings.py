@@ -75,11 +75,12 @@ class TestWireGuard(unittest.TestCase):
             gk_mock.return_value = ('private_key', 'public_key')
             with unittest.mock.patch('generate_settings.wgconfig.WGConfig.write_file'):
                 with unittest.mock.patch('generate_settings.os.mkdir'):
-                    with unittest.mock.patch('qrcode.make'):
-                        wg_interface = generate_settings.WireGuard('', '')
-                        wg_interface.server_public_key = 'public_key'
-                        wg_interface.add_client('peer_test', ('192.168.0.2/24', '192.168.0.2/32',),
-                                                '8.8.8.8', 'test.local', '0.0.0.0, ::/0')
+                    with unittest.mock.patch('generate_settings.qrcode.make'):
+                        with unittest.mock.patch('generate_settings.tinydb'):
+                            wg_interface = generate_settings.WireGuard('', '')
+                            wg_interface.server_public_key = 'public_key'
+                            wg_interface.add_client('peer_test', ('192.168.0.2/24', '192.168.0.2/32',),
+                                                    '8.8.8.8', 'test.local', '0.0.0.0, ::/0')
 
 
 if __name__ == "__main__":
