@@ -10,6 +10,7 @@ from typing import Union
 import wgconfig
 import wgconfig.wgexec
 import qrcode
+import tinydb
 
 CONFIGURATION_DIR = os.getenv('CONFIGURATION_PATH', '/config')
 SERVER_CONFIGURATION_FILE = os.path.join(CONFIGURATION_DIR, 'wg0.conf')
@@ -184,6 +185,29 @@ class WireGuard(wgconfig.WGConfig):
         self.add_peer(client_public_key)
         for attr_name, attr_value in init_server_peer.items():
             self.add_attr(client_public_key, attr_name, attr_value)
+
+        db = tinydb.TinyDB(os.path.join(self.configuration_dir), 'db', 'wg0.json')
+        db_data: dict = {
+            "id": client_public_key,
+            "name": client_name,
+            "private_key": client_private_key,
+            "DNS": dns_server,
+            "endpoint_allowed_ip": allowed_ips,
+            "total_receive": 0,
+            "total_sent": 0,
+            "total_data": 0,
+            "endpoint": "N/A",
+            "status": "stopped",
+            "latest_handshake": "N/A",
+            "traffic": [],
+            "allowed_ip": client_ips[0],
+            "mtu": "1420",
+            "keepalive": "21",
+            "remote_endpoint": vpn_domain_name.split(':')[0],
+        }
+
+        db.insert(db_data)
+        db.close()
 
 
 def logging_configuration(logger) -> None:
