@@ -9,9 +9,8 @@ buildah run "$ctr1" -- /bin/bash -c 'WIREGUARD_RELEASE=$(curl -sX GET "https://a
 mkdir /app; \
 cd /app; \
 git clone https://git.zx2c4.com/wireguard-linux-compat && \
-git clone https://git.zx2c4.com/wireguard-tools && \
+git clone -b $WIREGUARD_RELEASE https://git.zx2c4.com/wireguard-tools && \
 cd wireguard-tools && \
-git checkout "${WIREGUARD_RELEASE}" && \
 make -C ./src -j$(nproc) && \
 make -C ./src install && \
 dnf clean packages; \
@@ -22,6 +21,16 @@ rm -rf \
 /app/wireguard-tools \
 /tmp/* \
 /var/tmp/*'
+# Wait when accept pull requests
+# WGDASHBOARD_RELEASE=$(curl -sX GET https://github.com/donaldzou/WGDashboard/releases/latest | grep -oE "v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}");
+buildah run "$ctr1" -- /bin/bash -c 'WGDASHBOARD_RELEASE=develop; \
+cd /app; \
+git clone -b $WGDASHBOARD_RELEASE https://github.com/pgalonza/WGDashboard.git wgdashboard && \
+cd ./wgdashboard/src; \
+rm ./db/hi.txt >  /dev/null 2>&1; \
+chmod u+x wgd.sh; \
+chmod -R 755 /etc/wireguard'
+buildah run "$ctr1" -- pip3 install -r /app/wgdashboard/src/requirements.txt
 buildah copy "$ctr1" './image/scripts' '/scripts'
 buildah copy "$ctr1" './wireguard-requirements.txt' '/app/wireguard-requirements.txt'
 buildah run "$ctr1" -- pip3 install -r /app/wireguard-requirements.txt

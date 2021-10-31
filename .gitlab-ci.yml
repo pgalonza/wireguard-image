@@ -29,6 +29,7 @@ PyLint:
   image: python:3.9.2-alpine
   stage: test
   script:
+    - apk update && apk add --no-cache jpeg-dev zlib-dev gcc musl-dev
     - pip install --upgrade pip
     - pip install pylint==2.11.1
     - pip install -r wireguard-requirements.txt
@@ -73,6 +74,7 @@ Build image:
   image: registry.gitlab.com/pgalonza/basic-images/base-buildah:latest
   stage: build
   script:
+#    - dnf -y install buildah
     - buildah login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - chmod +x ./image/wireguard.sh
     - ./image/wireguard.sh
@@ -101,12 +103,7 @@ Deploy image:
       then echo 'latest'; elif [[ $CI_COMMIT_TAG ]] ;
       then echo $CI_COMMIT_TAG; else echo $CI_COMMIT_REF_NAME; fi)
     - ansible-playbook ./deploy-wireguard.yml -i ./production.yml
-      --extra-vars '{"image_tag":"$IMAGE_TAG_NAME"}'
-  rules:
-#    - if: '$CI_COMMIT_REF_NAME == "master"'
-#      when: always
-    - if: '$CI_COMMIT_REF_NAME == "develop"'
-      when: manual
-    - when: never
+      --extra-vars "{\"image_tag\":\"$IMAGE_TAG_NAME\"}"
+  when: manual
   environment: production
 ...

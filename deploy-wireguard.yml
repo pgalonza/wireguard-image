@@ -8,6 +8,13 @@
   vars_files:
     - "{{ lookup('env', 'ANSIBLE_VARIABLES') }}"
   tasks:
+    - name: Enable http port for certbot
+      ansible.posix.firewalld:
+        zone: public
+        service: http
+        permanent: yes
+        state: enabled
+        immediate: yes
     - name: Add wireguard to firewall service
       ansible.builtin.copy:
         src: ./files/wireguard.xml
@@ -16,6 +23,14 @@
       notify:
         - reload_firewalld
         - enable_wireguard
+    - name: Add wireguard dashboard to firewall service
+      ansible.builtin.copy:
+        src: ./files/wgdashboard.xml
+        dest: /etc/firewalld/services/wgdashboard.xml
+        mode: '0644'
+      notify:
+        - reload_firewalld
+        - enable_wgdashboard
     - name: Add WireGuard service user
       ansible.builtin.user:
         name: wireguard
@@ -30,7 +45,7 @@
         group: wireguard
     - name: Install podman
       dnf:
-        name: podman>=3.3.1
+        name: podman-3.3.1
         state: present
     - name: Stop and Remove WireGuard container
       containers.podman.podman_container:
@@ -38,7 +53,7 @@
         state: absent
     - name: Remove an WireGuard image
       containers.podman.podman_image:
-        name: "registry.gitlab.com/pgalonza/wireguard-image:{{ tag_name }}"
+        name: "registry.gitlab.com/pgalonza/wireguard-image:{{ image_tag }}"
         state: absent
     - name: Adding container network
       containers.podman.podman_network:
@@ -48,11 +63,11 @@
     - name: Pull a WireGuard latest image
       containers.podman.podman_image:
         name: registry.gitlab.com/pgalonza/wireguard-image
-        tag: "{{ tag_name }}"
+        tag: "{{ image_tag }}"
     - name: Run WireGuard container
       containers.podman.podman_container:
         name: wireguard
-        image: "registry.gitlab.com/pgalonza/wireguard-image:{{ tag_name }}"
+        image: "registry.gitlab.com/pgalonza/wireguard-image:{{ image_tag }}"
         state: started
         sysctl:
           net.ipv4.conf.all.src_valid_mark: 1
@@ -63,12 +78,18 @@
           - /usr/src/kernels:/usr/src/kernels
         ports:
           - "51820:51820/udp"
+          - "10086:10086/tcp"
+          - "80:80/tcp"
         network: "{{ network_mode }}"
         env:
           PUID: "{{ ug_id }}"
           PGID: "{{ ug_id }}"
           SERVERURL: "{{ vpn_urls[groups['vds'].index(inventory_hostname)] }}"
           PEERS: "{{ peers_count }}"
+          ENVIRONMENT: production
+          CONFIGURATION_PATH: /config
+          SSL: true
+
 
   handlers:
     - name: Restart firewalld service
@@ -81,5 +102,12 @@
         permanent: yes
         state: enabled
         immediate: yes
-      listen: enable_wireguard
+    - name: Enable wireguard dashboard service
+      ansible.posix.firewalld:
+        zone: public
+        service: wgdashboard
+        permanent: yes
+        state: enabled
+        immediate: yes
+      listen: enable_wgdashboard
 ...
