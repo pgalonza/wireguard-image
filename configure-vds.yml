@@ -51,9 +51,14 @@
       ansible.builtin.template:
         src: ./templates/jail.local.j2
         dest: /etc/fail2ban/jail.local
+    - name: Copy ssh configuration
+      ansible.builtin.copy:
+        src: /usr/lib/firewalld/services/ssh.xml
+        dest: /etc/firewalld/services/ssh.xml
+        remote_src: yes
     - name: Change ssh port in firewalld
       ansible.builtin.replace:
-        path: /usr/lib/firewalld/services/ssh.xml
+        path: /etc/firewalld/services/ssh.xml
         regexp: '^.*port="22"\/>$'
         replace: 'port="{{ ssh_custom_port }}"'
 ...
